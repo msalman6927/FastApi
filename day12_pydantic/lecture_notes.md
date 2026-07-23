@@ -1,4 +1,4 @@
-# Day 12 — Pydantic (Data Validation & Models)
+ Pydantic (Data Validation & Models)
 
 **Module:** 02 — FastAPI
 **Duration:** 2 hours
@@ -10,7 +10,7 @@
 
 ---
 
-# PART 1 — INSTRUCTOR DEEP-DIVE (teach yourself first)
+# PART 1 
 
 ## 1.1 The problem Pydantic solves
 
