@@ -1,16 +1,5 @@
  Pydantic (Data Validation & Models)
 
-**Module:** 02 — FastAPI
-**Duration:** 2 hours
-**Prerequisite:** OOP module (esp. Day 5 encapsulation/validation, Day 6 inheritance), Day 11 (JSON)
-
-> Where we are: Day 11 you learned APIs exchange **JSON data**. But data from the outside world is *untrusted* — a user might send `age: "banana"` or forget a required field. Before FastAPI can safely accept requests, we need a way to **define the shape of our data and validate it automatically**. That tool is **Pydantic**. It's the single most important prerequisite for FastAPI — FastAPI literally uses Pydantic under the hood to validate every request. Master it today and FastAPI (Day 13) becomes easy.
->
-> **Instructor note:** Pydantic connects straight to what students already know. A Pydantic model is a **class** that **inherits** from `BaseModel` (OOP Day 6), and it does automatic **validation** — the professional version of the `@property` setters from OOP Day 5. Lean on those connections; it makes a "new" library feel familiar.
-
----
-
-# PART 1 
 
 ## 1.1 The problem Pydantic solves
 
