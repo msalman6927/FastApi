@@ -190,79 +190,7 @@ class User(BaseModel):
 ```
 Pydantic validates the whole tree — if `address.city` is missing, you get a precise nested error path (`address -> city`). This mirrors how JSON objects nest (Day 11), and it's how APIs model complex payloads.
 
-## 1.10 Pydantic v1 vs v2 (so students aren't confused by old tutorials)
-Many online tutorials use v1. Key renames in **v2 (what we use)**:
-| v1 (old) | v2 (current) |
-|----------|--------------|
-| `@validator` | `@field_validator` (+ `@classmethod`) |
-| `.dict()` | `.model_dump()` |
-| `.json()` | `.model_dump_json()` |
-| `class Config:` | `model_config = ConfigDict(...)` |
-| `.parse_obj()` | `.model_validate()` |
-Tell students: if a tutorial uses `.dict()` or `@validator`, it's v1 — translate to the v2 names above.
 
-## 1.11 Common mistakes (warn students)
-1. **`Optional[str]` without `= None`** thinking it's optional — it's still *required*, just nullable. Add the default.
-2. **Forgetting `return value`** in a `@field_validator` → the field becomes `None`. Always return.
-3. **Forgetting `@classmethod`** on a v2 validator → error.
-4. **Expecting silent failure** — Pydantic *raises* `ValidationError`; wrap risky construction in try/except when you want to handle it gracefully.
-5. **Using v1 syntax** (`.dict()`, `@validator`) on v2 → attribute errors. Use v2 names.
-6. **Confusing coercion limits** — `"25"→25` works, but `"twenty"→int` fails. Coercion is for *convertible* values only.
-7. **Mutating a model expecting no validation** — by default v2 doesn't re-validate on assignment unless configured; not a beginner concern, just don't rely on it.
-
-## 1.12 Tricky student questions & your answers
-
-**Q: "How is a Pydantic model different from a normal class?"**
-A: It's a class that inherits from `BaseModel`. The difference is Pydantic auto-generates `__init__`, and *validates + converts* the data against your type hints at creation. A normal class does none of that automatically.
-
-**Q: "How is this different from a dataclass?"**
-A: `@dataclass` bundles data with an auto `__init__` but does **no validation or coercion**. Pydantic adds runtime validation, type conversion, JSON serialization, and rich errors. For untrusted/external data (APIs), use Pydantic.
-
-**Q: "Why do type hints suddenly matter? I thought Python ignored them."**
-A: Plain Python does ignore them at runtime. Pydantic *reads* them and enforces them. That's its whole trick — making annotations real.
-
-**Q: "When does validation run?"**
-A: When you create the model (`User(...)`) or call `model_validate(...)`. If the data is bad, it raises immediately — you never get a half-valid object.
-
-**Q: "Do I need Pydantic if I'm careful with my data?"**
-A: For your own trusted code, maybe not. For data from *outside* (API requests, user input, files), always — you can't trust external data, and Pydantic makes checking it one line instead of fifty.
-
-**Q: "How does this connect to FastAPI?"**
-A: In FastAPI you declare a Pydantic model as your request body. FastAPI automatically parses the JSON, validates it against your model, returns a **422** with a clear error if it's bad, and hands your endpoint a clean typed object. Everything today is what FastAPI runs for you.
-
----
-
-# PART 2 — 2-HOUR LECTURE PLAN (minute-by-minute)
-
-| Time | Segment | What you do |
-|------|---------|-------------|
-| **0–10 min** | **Recap Day 11 + hook** | Recap: APIs exchange JSON, but external data is untrusted. Show `code/01_without_pydantic.py` — the mess of hand-written validation. "There's a better way." |
-| **10–30 min** | **First model (live)** | `code/02_first_model.py`: `class User(BaseModel)`, fields as type hints, no `__init__` needed. Connect to OOP inheritance + auto-constructor. |
-| **30–55 min** | **Coercion & errors (live)** | `code/03_validation_and_errors.py`: `"25"→25`, `"banana"`→`ValidationError`, missing required field, `e.errors()`. Required vs optional vs nullable. |
-| **55–80 min** | **Constraints & custom validators (live)** | `code/04_field_constraints.py`: `Field(gt=..., min_length=...)`, then `@field_validator` for custom rules. Tie back to OOP Day 5 `@property` validation. |
-| **80–100 min** | **Nested models + serialization (live)** | `code/05_nested_and_practical.py`: nested models, lists, `model_dump`/`model_dump_json`, building from a dict. The full JSON→object→JSON loop. |
-| **100–112 min** | **Assignment brief + v1/v2 note** | Warn about old tutorials (v1 vs v2). Walk through `assignments/assignment.md`. |
-| **112–120 min** | **Q&A / buffer** | Answer questions; preview Day 13 — "tomorrow FastAPI runs all of this for you on real requests." |
-
-**Timing tip:** the highest-impact demo is the `ValidationError` in `03` — show the actual error message and say "this exact error is what your API will return as a 422 tomorrow." Constraints + custom validators (55–80) are the meat; give them room. If short on time, `@model_validator` (cross-field) can be a mention rather than a full demo.
-
----
-
-# PART 3 — CODE / DEMO FILES (in `code/`, run in this order)
-
-1. `01_without_pydantic.py` — the pain of hand-written validation (motivation).
-2. `02_first_model.py` — `BaseModel`, fields as type hints, auto-`__init__`.
-3. `03_validation_and_errors.py` — coercion, `ValidationError`, required/optional/nullable.
-4. `04_field_constraints.py` — `Field()` constraints + `@field_validator` custom rules.
-5. `05_nested_and_practical.py` — nested models, lists, `model_dump`/`model_dump_json`, dict↔model.
-
-**Install command needed today:**
-```
-pip install pydantic
-```
-(No internet needed to run the demos — Pydantic is local. `EmailStr` needs the extra `pip install "pydantic[email]"`; we avoid it to keep installs simple and use a regex/validator instead.)
-
----
 
 # PART 4 — STUDENT HANDOUT
 See `student_handout.md` in this folder for the short student recap.
