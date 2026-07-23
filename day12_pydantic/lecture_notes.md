@@ -102,7 +102,19 @@ Teach the distinction clearly:
 - **Optional / nullable:** `Optional[str] = None` (or modern `str | None = None`) means "a string or nothing." Common for fields that may be absent.
 
 Common confusion: `Optional[str]` alone (without `= None`) is still *required* — it just allows `None` as a value. To make it truly optional you also give it a default. Spell this out; it trips people up.
+### Optional String with Strict Validation
 
+```python
+from pydantic import StrictStr
+from typing import Optional
+
+description: Optional[StrictStr] = None
+```
+
+**Meaning:**
+- `description` can be a string or `None`.
+- If a non-string value (e.g. `123`) is provided, validation will fail.
+- 
 ## 1.6 Field constraints with `Field()`
 
 For rules beyond the type (ranges, lengths), use `Field()`:
