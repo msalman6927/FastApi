@@ -36,7 +36,7 @@ This is tedious, repetitive, and easy to get wrong — and you'd rewrite it for 
 
 The magic: **you describe data with Python type hints, and Pydantic enforces them at runtime.** Normally type hints are just documentation Python ignores; Pydantic makes them *real*.
 
-Install: `pip install pydantic`. We're on **Pydantic v2** (current) — note the syntax if students find v1 tutorials online (see 1.10).
+Install: `uv add pydantic`. We're on **Pydantic v2** (current) — note the syntax if students find v1 tutorials online (see 1.10).
 
 ## 1.3 Your first model
 
