@@ -154,7 +154,6 @@ class User(BaseModel):
             raise ValueError("password must contain a digit")
         return value        # ALWAYS return the (possibly cleaned) value
 ```
-Teaching points:
 - Decorated with `@field_validator("field_name")` and `@classmethod` (it receives `cls`).
 - It receives the field's value; **raise `ValueError`** to reject, or **return the value** (optionally transformed, e.g., `value.strip().lower()`) to accept.
 - You can validate multiple fields: `@field_validator("field1", "field2")`.
