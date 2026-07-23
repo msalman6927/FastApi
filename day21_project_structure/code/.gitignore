@@ -1,0 +1,8 @@
+# Never commit real secrets or environment files.
+.env
+# Virtual environment and caches
+.venv/
+__pycache__/
+*.pyc
+# Local databases
+*.db
